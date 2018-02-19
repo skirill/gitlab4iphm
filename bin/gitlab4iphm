@@ -5,21 +5,22 @@ Command-line interface for gitlab4iphm.
 """
 
 import argparse
-from gitlab4iphm import Executor
+from gitlab4iphm.models import MilestoneNotes
 
 
 def main():
     parser = argparse.ArgumentParser(description='Perform GitLab tasks for IPHost Network Monitor.')
     parser.add_argument('--release-notes-for', metavar='MILESTONE',
                         help='Prepares release notes for a milestone passed as an argument.')
+    parser.add_argument('--destination', metavar='destination',
+                        help='Whether to save to file or wiki', choices=['file', 'wiki'], default='file')
     parser.add_argument('conf_dir', metavar='[CONFIG_DIRECTORY]',
                         help='The directory containing the required configuration files.')
     args = parser.parse_args()
 
-    executor = Executor(config_path=args.conf_dir)
-
     if 'release_notes_for' in args:
-        executor.prepare_release_notes(args.release_notes_for)
+        notes = MilestoneNotes(args.conf_dir, args.release_notes_for)
+        notes.save(args.destination)
 
 
 if __name__ == "__main__":

@@ -20,6 +20,6 @@ def perform_request(url, method, data={}, params={}, headers={}, dry_run=False):
     result = func(url, params=params, data=data, headers=headers)
 
     if result.status_code in [200, 201]:
-        return result.json()
+        return result.headers, result.json()
 
     raise Exception("{} failed requests: {}".format(result.status_code, result.reason))
